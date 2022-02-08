@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1625864673911.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "CE475750",
+    "lastKnownWriteTime" : 1626134253,
+    "last_content_update" : 1626140731609,
+    "path" : "C:/Users/sept/Desktop/Directorio/CIDE/Trabajos de R/Tidyversecurso/scripts/Curso_Tidyverse_transformacion_DWRANGLING.R",
+    "project_path" : "scripts/Curso_Tidyverse_transformacion_DWRANGLING.R",
+    "properties" : {
+        "cursorPosition" : "606,4",
+        "scrollLine" : "593",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

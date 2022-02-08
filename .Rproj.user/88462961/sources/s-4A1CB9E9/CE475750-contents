@@ -1,0 +1,631 @@
+#vamos a trabajar con el paquete dplyr
+
+library(tidyverse)
+library(nycflights13)
+
+
+nycflights13::flights
+
+
+?flights
+View(flights)
+
+
+#tibble, dataframe mejorado para mejorar el manejo por tidyverse
+
+# int -> numeros enteros
+# dbl ->  numeros reales
+# chr -> vector de caracteres
+# dttm ->  date + time 
+# lgl -> logical, contiene valores booleanos True or False
+# fctr ->  factor, variables categoricas
+# date ->  fecha, día, mes, año
+
+# filter ->  filtrar datos u observaciones a partir de valores concretos
+# arrange ->  función para reordenar las filas 
+# select  ->  seleccionar variable por su nombre
+# mutate -> crea nuevas variables a partir de las existentes
+# summarise -> colapsa varios valores para dar un resumen
+
+# group_by -> opera la funcion a la que acompaña grupo o factor
+
+#sesion 41
+
+
+# FILTER
+
+ jan1<-  filter(flights, month == 1, day == 1)
+
+
+ apr1<-  filter(flights, month == 4, day == 27)
+
+ 
+(dec25 <-  filter(flights, month == 12, day == 25))
+ 
+# algunos operadores logicos
+ 
+ sqrt(2)^2 == 2 # eso pasa porque el algoritmo realiza una aproximación
+ near(sqrt(2)^2,2)
+  1/pi *pi == 1  
+ 
+  
+#sesion 42 operadores booleanos
+  
+  
+  
+  filter(flights, month == 5 | month == 6)
+ 
+  filter(flights, month == 5 | 6) # no es correcto
+  
+  
+  #ahora solo quiero los vuelos que ocurrieren entre mayo y junio
+  
+  may_june <- filter(flights, month %in% c(5,6))
+
+  
+  #Ley Morgan
+  
+  # !(x&y) == !x|!y
+  # !(x|y) == (!x)&(!y)
+  
+  
+#ejemplo
+  
+  filter(flights, !(arr_delay > 60 | dep_delay > 60))
+  
+  
+  filter(flights, arr_delay <= 60 , dep_delay <= 60)
+  
+  
+  
+  #sesion 42 valores NA
+  
+  
+  
+# NA : NOT AVAILABLE
+  
+  #is.na() podemos usarla
+  #cuando filtramos debemos tener cuidado con esto
+  
+  #vamos a crear un pequeño dataframe
+  
+  df <- tibble(x = c(1,2,NA,4,5))
+  
+  df
+  
+  filter(df, x > 2)
+  
+  filter(df, is.na(x) | x > 2) 
+  
+  
+  #sesion 44 funcion arrange
+  
+  #si tengo un df puedo buscar
+  
+  #las primeras 10 fils con
+  
+  
+  head(flights, 10)
+  
+  #o las últimas, con
+  
+  tail(flights, 10)
+
+  
+  
+  #reordenamos filas con ARRANGE
+  
+  sorted_date <- arrange(flights, year, month, day)
+  
+  head(sorted_date, 10)
+  
+  #o las últimas, con
+  
+  tail(sorted_date, 10)
+  
+  #si queremos ordenar por descendiente
+  
+  arrange(flights, desc(arr_delay))
+  head(arrange(flights, desc(arr_delay)))
+  
+  head(arrange(flights, desc(dep_delay)))
+  
+  #
+  
+  arrange(df, x)
+  arrange(df, desc(x))
+
+  
+  View(arrange(flights, carrier))  
+  
+  
+  View(arrange(flights, desc(distance)))
+  
+  
+  
+  
+  #ASSIGMENT 8
+  
+  ?flights
+  #Questions for this assignment
+  #Encuentra todos los vuelos que llegaron más de una hora tarde de lo previsto.
+  
+  filter(flights, (arr_delay > 60))
+  
+  #son 27789 vuelos
+  
+  #Encuentra todos los vuelos que volaron hacia San Francisco (aeropuertos SFO y OAK)
+  
+  filter(flights, dest == "SFO" | dest == "OAK")
+  
+  # 13643 vuelos con destino a San Francisco:aeropuertos SFO y OAK
+  
+  #Encuentra todos los vuelos operados por United American (UA) o por American Airlines (AA)
+  
+  filter(flights, carrier == "UA" | carrier == "AA" )
+  
+  # estos fueron 91394
+  
+  #Encuentra todos los vuelos que salieron los meses de primavera (Abril, Mayo y Junio)
+  
+  filter(flights, month %in% c(4,5,6))
+  filter(flights, month == 4 | month == 5 | month == 6)
+  
+  #En total salieron 85369 vuelos
+  
+  #Encuentra todos los vuelos que llegaron más de una hora tarde pero salieron
+  #con menos de una hora de retraso.
+  
+  filter(flights, arr_delay > 60, dep_delay < 60)
+  filter(flights, arr_delay > 60 & dep_delay < 60) # alternativa
+  
+  
+  # fueron 4956 vuelos
+  
+  #Encuentra todos los vuelos que salieron con más de una hora de retraso
+  #pero consiguieron llegar con menos de 30 minutos de retraso (el avión aceleró en el aire)
+  
+  
+  filter(flights, dep_delay > 60, arr_delay < 30)
+  filter(flights, dep_delay > 60 & arr_delay < 30)
+  
+  # fueron 181 vuelos que cumplen con esta condición
+  
+  #Encuentra todos los vuelos que salen entre medianoche y las 7 de la mañana (vuelos nocturnos).
+  
+  
+  View(flights)
+  ?between
+  ?flights
+  
+  View(filter(flights, hour <= 7))
+  
+  #son 50726 vuelos
+  
+  #Investiga el uso de la función between() de dplyr. ¿Qué hace? Puedes usarlo para resolver
+  #la sintaxis necesaria para responder alguna de las preguntas anteriores?
+  
+  # la funcion permite separar un subconjunto de valores que se encuentran en un vector
+  #por ejemplo, podemos utuilizarlo para extraer datos numéricos (el vector de datos debe ser  numerico)
+  # es aplicable al inciso anterior,
+  
+  filter(flights, between(hour, 0,7))
+  
+  
+    #¿Cuantos vuelos tienen un valor desconocido de dep_time?
+    
+  filter(flights, is.na(dep_time)) # 8255 vuelos
+ 
+    
+  #¿Qué variables del dataset contienen valores desconocidos?
+  
+  apply(is.na(flights), 2, sum)  
+  
+  ?apply
+  # estas son dep_time, dep_delay, arr_time, arr_delay,
+  #tailnum. air_time
+  
+  #¿Qué representan esas filas donde faltan los datos?
+  
+    #son observacuiones no disponibles.
+  
+  
+    #Ahora vas a sorprenderte con la magia oscura... 
+  #Contesta que dan las siguientes condiciones booleanas
+  
+  NA^0
+  
+  #da 1
+  
+  NA|TRUE
+  
+  #verdadero
+  
+  FALSE&NA
+  TRUE&NA
+  TRUE&FALSE
+  FALSE&FALSE
+  NA*0
+  # False
+  
+  #Intenta establecer la regla general para saber cuando es o no es NA (cuidado con NA*0)
+  
+  
+  
+    #https://thomasadventure.blog/es/posts/r-contar-na/
+  #http://betaeconomia.blogspot.com/2019/08/valores-perdidos-na-en-r-identificacion.html
+  
+  
+  
+  #sesion 45
+  
+  #usando la funcion SELECT
+  
+  arrange(flights, carrier)
+  
+  
+  #quiero ciertos valores, por ejemplo una fila
+  
+  sorted_date[1,] # me entrega la fila 1 de sorted_date
+  
+  View(sorted_date[1024:1068,]) # filas 1 a la 3 de todas las variables del dataset
+  
+  #si quiero acotar el análisis a un conjunto de variables
+  
+  select(sorted_date[1024:1068,], dep_delay, arr_delay)
+  
+  
+  # lo mismo para todo el data set
+  
+  select(flights, year, month, day)
+  
+  #otra forma de seleccionar usando ":" 
+  
+  select(flights, dep_time:arr_delay)
+  
+  #si quiero todas las columnas menos year, month, day
+  
+  select(flights, -(year:day))
+  
+  
+  #si quiero encontrar a aquellas cuyas variables comienzan por un chracter
+  
+  select(flights, starts_with("dep"))
+
+  #si quiero buscar todas las columnas que terminen con delay
+  
+  select(flights, ends_with("delay"))
+  
+  #si quiere algunas que contienen una "s"
+  
+  select(flights, contains("st"))
+  
+  # ahora las más utilizadas son aquellas expresiones regulares
+  
+  select(flights, matches("(.)\\1")) ## matches es del paquete dyplr, no confundir con match que es de stats
+
+  # me busca variables seleccionadas cuando difieren en el subindice
+  
+  select(flights, num_range("x", 1:5)) # busca x1, x2, ..., x5
+  
+    
+  
+  #sesion 45
+  
+  # una variante de la select para renombrar es rename
+  # se recomienda usar rename
+  
+  rename(flights, deptime = dep_time)
+
+  #con select
+  
+  select(flights, deptime = dep_time) # solo me devuelve una columna
+  
+  
+  # ahora, si quisiera seleccionar, pocas variables de interés
+  # se eligen
+  
+  select(flights, time_hour, distance, air_time)
+  
+  #pero si me interesan ordenar las columnas en un orde, puedo añadir todas 
+  #las demás columnas
+  
+  select(flights, time_hour, distance, air_time, everything())
+  
+  ## ASSIGNMENT 9
+  
+ # Questions for this assignment
+#  Piensa cómo podrías usar la función arrange() 
+  #para colocar todos los valores NA al inicio. 
+  #Pisa: puedes la función is.na() en lugar de la función desc() 
+  #como argumento de arrange.
+  
+  arrange(flights, desc(is.na(dep_delay)), dep_delay)
+
+  
+ # Ordena los vuelos de flights para encontrar los vuelos más retrasados en la salida.
+  #¿Qué vuelos fueron los que salieron los primeros antes de lo previsto?
+
+  arrange(flights, desc(dep_delay))
+  
+  ?flights
+  
+  
+  
+ #los dep_delay con números negativos son los que salieron con mucha anticipación,
+  # si ordenamos de manera ascendente encontraremos esos vuelos
+  #estos fueron los del:
+  #7 de dicciembre del 2013, vuelo 97 N592JB, carrier B6
+  
+  anticipated_flights  <- arrange(flights, dep_delay)
+  
+  anticipated_flights[1:5,]
+  #    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time arr_delay carrier flight tailnum
+  #1  2013    12     7     2040           2123       -43       40           2352        48 B6          97 N592JB 
+  #2  2013     2     3     2022           2055       -33     2240           2338       -58 DL        1715 N612DL 
+  #3  2013    11    10     1408           1440       -32     1549           1559       -10 EV        5713 N825AS 
+  #4  2013     1    11     1900           1930       -30     2233           2243       -10 DL        1435 N934DL 
+  #5  2013     1    29     1703           1730       -27     1947           1957       -10 F9         837 N208FR 
+  
+  #  Ordena los vuelos de flights para encontrar los vuelos más rápidos. Usa el concepto de rapidez que consideres. 
+  
+  ?flights
+  
+  #Usaré la variable distancia y varriable tiempo en el aire para y 
+  #las ordenaré de mayor a menor
+  
+ (arrange(flights, desc(distance/air_time)))
+  
+  
+  #¿Qué vuelos tienen los trayectos más largos?
+  
+  View(arrange(flights, desc(distance)))
+  # el vuelo más largo es entre JFK y HNL con una distancia de 4983 millas. New York a Honolulu
+  
+  #Busca en Wikipedia qué dos aeropuertos del dataset alojan los vuelos más largos. 
+  
+  #¿Qué vuelos tienen los trayectos más cortos?
+  
+  View(arrange(flights, distance))
+  # los más cortos son entre EWR-LGA y EWR-PHL
+  
+
+  #Dale al coco para pensar cuantas más maneras posibles de seleccionar los campos dep_time,
+  #dep_delay, arr_time y arr_delay del dataset de flights. 
+  
+  #EJEMPLOS :
+   
+ejemplos_campos_1 <-  select(flights, dep_time, dep_delay, arr_time, arr_delay)
+ejemplos_campos_2 <- select(flights, dep_time:arr_delay, -(sched_dep_time),- (sched_arr_time))  
+
+  #¿Qué ocurre si pones el nombre de una misma variable varias veces en una select()?
+    
+select(flights, dep_time, dep_time, dep_time)
+      # no pasa nada, solo sobreescribe
+
+   # Investiga el uso de la función one_of() de dplyr.
+
+?one_of # selecciona las variables pasadas de un vector
+
+  #Investiga cómo puede ser útil la función one_of() 
+#de la pregunta anterior en conjunción con el vector de variables 
+    #c("year", "month", "day", "dep_delay", "arr_delay")
+  
+# primero, debemos crear el vector
+
+variables_flights <- c("year", "month", "day", "dep_delay", "arr_delay")
+
+#luego, llamamos a este vector 
+
+select(flights, one_of(variables_flights))
+
+
+
+  #Intenta averiguar el resultado del siguiente código. Luego ejecútalo y 
+#a ver si el resultado te sorprende.
+  
+  select(flights, contains("time"))
+  
+  # selecciona las variables que tiene el string time
+    #Intenta averiguar cómo lo hacen las funciones de ayuda de la select para tratar 
+#el caso por defecto y cómo lo puedes cambiar.
+   
+  #el caso por defecto es siempre verdadero
+  ?select
+# lo podemos cambiar con 
+ # contains(match, ignore.case = TRUE, vars = NULL)
+  
+  #select(flights, contains("time", ignore.case = TRUE/FALSE, vars = NULL))
+  
+  ##sesion 47
+  
+  ##mutate creando nuevas variables con mi data set
+  
+  flights_new <- select(flights, year:day, 
+                        ends_with("delay"),
+                        distance,
+                        air_time)
+
+  
+  View(flights_new)  
+
+  mutate(flights_new, time_gain = arr_delay - dep_delay,
+         flight_speed = distance/(air_time/60))
+  
+  #creando nuevas variables con mi data set, quedándme solo con las nuevas uso transmute()
+  
+  transmute(flights_new, time_gain = arr_delay - dep_delay,
+              flight_speed = distance/(air_time/60) )
+  
+  ## mutate y transmute, l funcion debe ser vectorizada
+  #podemos hacer operaciones aritmeticas
+  #reglas del reciclaje
+  #funciones agregadas: x/sum(x ) coo una proporcion del total
+  # o x - mean(x), (x-mean(x))/sd(x) tipificacion
+  #x - min(x)/x- max(x)
+  #aritmetica modeular %/% cociente de la división entera, %% resto de la division entera
+   #ejemplo
+
+  transmute(flights, 
+            air_time,
+            air_hour = air_time %/% 60, # parte entera de la duivision
+            air_minute = air_time %% 60) #resto de los minutos de las division
+  
+  
+  # logaritmos, log = logaritmos neperiano, log2(), log10(), 
+  #offset: lead(), lag()
+  
+  df <-  1:12
+lag(1:12)   #movemos posiciones
+lead(1:12)
+
+#funciones acumulativas cumsum(), cumprod(), cummin(), cummax(), cummin()
+
+cumsum(df)
+cumprod(df) # sucesion de numeros factorials
+cummin(df) # acumula el numero mas pequeños
+cummax(df) # acumula el numero más pequeño
+cummean(df) # promedios de los acumulados
+
+#comparaciones logicas : >, >=, <, <=, ==, !=
+
+transmute(flights, has_been_deleyed = dep_delay > 0) # operaciones booleanas
+
+#rankings: ordenar min_rank()
+
+df <- c(1, 2, 3, NA, 8, 1, NA, 9, 7, 6)
+min_rank(df)
+
+min_rank(desc(df))
+
+
+dense_rank(df)
+# variantes row_number()
+#dens_rank()
+#percent_rank()  porcentaje respecto al total
+#cume_dist() percentiles de cada uno de los eleemntos
+#ntile(df, n = ?)
+
+ntile(df, n = 4)
+
+    transmute(flights,
+              dep_delay,
+              ntile(dep_delay, n = 100))
+
+    
+    
+    #ASSIGNMENT 
+    #El dataset de vuelos tiene dos variables, dep_time y sched_dep_time muy útiles 
+    #pero difíciles de usar por cómo vienen dadas al no ser variables contínuas.
+    #Fíjate que cuando pone 559, se refiere a que el vuelo salió a las 5:59... 
+    #Convierte este dato en otro más útil que represente el número de minutos que horas desde media noche. 
+    
+    
+    
+  select(flights, dep_time, sched_dep_time)
+  
+  View(flights)
+  
+  
+  transmute(flights, dep_time, 
+                    dep_time_hour = dep_time%/% 100,
+                    dep_time_minute = dep_time %% 100,
+                    dep_time_total_minutes = dep_time_hour * 60 + dep_time_minute)
+    
+    
+    
+View(flights)
+
+#Compara las variables air_time contra arr_time - dep_time. 
+    
+
+
+transmute(flights, air_time, 
+          arr_time,
+          dep_time,
+          contra_time = arr_time - dep_time)
+                
+      
+    #¿Qué esperas ver?
+    #esperamos ver que exista una relacion entre los horarios de llegado y salida 
+    # con los tiempos en el aire
+
+  #  ¿Qué ves realmente?
+
+    #vemos diferencias entre el tiempo en el aire y contra_time
+     
+      # ¿Se te ocurre algo para mejorarlo y corregirlo?
+
+  # podríamos estandarizar todos los variables a un término de tiempo comun, por ejemplo tiempo en minutos
+  #y ver las diferencias entre salidas y llegadas, ver si esas diferencias se debe al huso horario
+    
+
+    #Compara los valores de dep_time, sched_dep_time y dep_delay.
+
+          select(flights, dep_time, sched_dep_time, dep_delay)
+
+    #Cómo deberían relacionarse estos tres números? Compruébalo y haz las correcciones numéricas que necesitas.
+          
+          
+          min(flights$dep_delay, na.rm = T)
+          
+          arrange(flights, desc(dep_delay))
+   
+    #En particular, los valores  de dep_delay están en minutos, por lo tanto, podemos dejar
+          #todos los valores expresados en minutos, ya que dep_time y sched_de_time estan en horaminutos. Dememos normalizar
+          # en este caso dep_time - sched_dep_time = dep_delay, pero las unidades son difrentes. Debemos ver los valores
+          #de atrasos de las salidas para ver como proceder
+          
+          min(flights$dep_delay, na.rm = T) # valor mínimo
+          max(flights$dep_delay, na.rm = T) #alor máximo para dep_delay
+          
+          
+          #voy a crear una variable nueva para dep_delay con el tiempo estandarizado en horas, por tanto lo dividiré
+          #en 60 min, es decir,  1 hr/60 min = 1
+          
+          #esto es,
+          
+          
+          transmute(flights, dep_delay_hour = dep_delay/60) # recordemos que el negativo significa que el 
+                                                            #vuelo salio antes del schedule
+          
+          
+          #ahora voy a tomar los minutos y convertirlos a horas para dep_time y sched_dep_time
+                    
+      data <- transmute(flights, dep_delay,
+                                 dep_time,
+                                 sched_dep_time,
+                                 dep_time_min = ((dep_time %/% 100)*60 + (dep_time %% 100)) %% 1440,
+                                 sched_dep_time_min = ((sched_dep_time %/% 100)*60 + (sched_dep_time %% 100)) %% 1440,
+                                delay = dep_delay + sched_dep_time_min - dep_time_min)
+          
+     
+         ggplot(data) +
+           geom_histogram(mapping = aes(delay))
+   
+               
+    #Usa una de las funciones de ranking para quedarte con los 10 vuelos más retrasados de todos. 
+            
+            #ordenamos por dep_delay dentro del arrange para obtener los más retrasados
+            
+           View (arrange(flights, desc(dep_delay))[1:10,])
+    
+    #Aunque la ejecución te de una advertencia, qué resultado te da la operación
+    
+    1:6 + 1:20
+    
+    #el resultado es,
+    
+   #   [1]  2  4  6  8 10 12  8 10 12 14
+    # [11] 16 18 14 16 18 20 22 24 20 22
+    
+    # el warning es
+    
+    #Warning message:
+    #  In 1:6 + 1:20 :
+    #  longitud de objeto mayor no es múltiplo de la longitud de uno menor
+    
+    #Además de todas las funciones que hemos dicho, las trigonométricas también son funciones vectoriales 
+    #que podemos usar para hacer transformaciones con mutate. 
+    #Investiga cuales trae R y cual es la sintaxis de cada una de ellas.
+    

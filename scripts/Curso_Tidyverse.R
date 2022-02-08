@@ -1,0 +1,931 @@
+#Data visualizacion
+library(tidyverse)
+#v ggplot2 3.3.5     v purrr   0.3.4
+#v tibble  3.1.2     v dplyr   1.0.7
+#v tidyr   1.1.3     v stringr 1.4.0
+#v readr   1.4.0     v forcats 0.5.1
+
+#Coches con motor más grande consumen más gasolina
+#respecto de motores más pequeños (pregunta).
+#Relacion consumo tamaño es lineal u  otra (positiva-negativa)
+
+mpg
+
+View(mpg)
+
+#anotar el significado de cada variable
+#displ:engine displacement, in litres
+#hwy: highway miles per gallon (3,785 ltrs)
+#fl:tipo de combustible
+help(mpg)
+?mpg
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+
+#ASSIGMENT 1
+
+#Si ejecutas ggplot(data = mpg), ¿qué observas?
+
+ggplot(data = mpg) # se observa en la salida de plots un area gris
+
+
+# Indica el número de filas que tiene el data frame mpg. ¿Qué significa cada fila?
+
+# Contiene 234 filas. Cada fila corresponde a una observacion
+
+# Indica el número de columnas que tiene el data frame mpg. ¿Qué significa cada columna?
+
+# Contiene 11 columnas. Estas corresponden a las variables de interés
+
+# Observa la variable drv del data frame. ¿Qué describe? Recuerda que puedes usar la instrucción ?mpg para consultarlo directamente en R.
+
+?mpg
+# la variable drv corresponde al tipo de tracción del motor, donde f es la tracción delantera
+# r es la tracción trasera y 4 corresponde a tracción en las 4 ruedas. el motor envía fuerza a
+# alguno de estos lugares.
+
+# Realiza un scatterplot de la variable hwy vs cyl. ¿Qué observas?
+
+ggplot (data = mpg)  +
+  geom_point (mapping = aes(x = cyl, y = hwy))
+
+# la figura muestra que a mayor cilindrada es menor a la distancia recorrida por galon de combustible
+
+
+# Realiza un scatterplot de la variable cty vs cyl. ¿Qué observas?
+
+
+ggplot (data = mpg)  +
+  geom_point (mapping = aes(x = cyl, y = cty))
+
+#mayor cyl menor millas de ciudad recorridas
+
+# Realiza un scatterplot de la variable class vs drv. ¿Qué observas? ¿Es útil este diagrama? ¿Por qué?
+
+
+ggplot (data = mpg)  +
+  geom_point (mapping = aes(x = class, y = drv))
+
+# se observan líneas paralelas que relacionan el tipo de automovil con el sistema de traccion
+# no es muy util ya que no transmite informacion respecto de las distribuiciones reales
+# en la muestra ya que los puntos estan sobrelapados
+
+
+#sesion  20 visualizacion
+
+
+ggplot (data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+
+#Agregamos una herramienta de visualizacion por niveles o las categorias
+
+
+#color de puntos
+ggplot(data = mpg ) + 
+  geom_point(mapping = aes(x =displ, y = hwy, colour = class))
+
+
+
+#tamaño de puntos 
+
+ggplot(data = mpg ) + 
+  geom_point(mapping = aes(x =displ, y = hwy, size = class))
+
+#transparencia de los puntos
+
+
+ggplot(data = mpg ) + 
+  geom_point(mapping = aes(x =displ, y = hwy, alpha = class))
+
+
+#forma de los puntos // ojo copn shape ue solo puede utilizar seis formas
+
+ggplot(data = mpg ) + 
+  geom_point(mapping = aes(x =displ, y = hwy, shape = class))
+
+# seleccion manual de colores
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy), color = "red")
+
+#color = nombre del color en formato string
+#size = tamano dle punto en mm
+#shape = forma del punto desde 0 a 24 (buscar shape en gglplot)
+
+d=data.frame(p=c(0:25,32:127))
+ggplot() +
+  scale_y_continuous(name="") +
+  scale_x_continuous(name="") +
+  scale_shape_identity() +
+  geom_point(data=d, mapping=aes(x=p%%16, y=p%/%16, shape=p), size=5, fill="red") +
+  geom_text(data=d, mapping=aes(x=p%%16, y=p%/%16+0.25, label=p), size=3)
+
+#hacemos algunas modificaciones con shape
+
+# seleccion manual de colores
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy),
+             shape = 23, color = "red", size = 10, fill = "yellow")
+
+
+#ASSIGMENT 2
+
+
+#Questions for this assignment
+#Toma el siguiente fragmento de código y di qué está mal. ¿Por qué no aparecen
+#pintados los puntos de color verde?
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = "green"))
+
+# Para que los puntos sean pintados de color verde se necesita que
+#se cierre el parentesis en hwy y luego coma, de tal forma que el 
+#codigo correcto sea:
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy), color = "green")
+
+
+
+#Toma el dataset de mpg anterior y di qué variables son categóricas.
+
+#las que son 
+
+View(mpg)
+
+# las variables categoricas son manufacturer, model, trans, drv, fl, class, year
+
+#Toma el dataset de mpg anterior y di qué variables son contínuas.
+
+# las variables continuas son displ, cyl, cty, hwy.
+
+?mpg
+#Dibuja las variables contínuas con color, tamaño y forma respectivamente. 
+
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy), color = "black", size = 5, shape = 2) 
+
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = cty, y = hwy), color = "black", size = 3, shape = 4) 
+
+
+
+#¿En qué se diferencian las estéticas para variables contínuas y categóricas?
+
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = cty)) # Ejemplo continua
+
+ggplot(data = mpg) +
+  geom_point( mapping = aes (x = displ, y = hwy, color = class)) # ejemplo categorica
+
+
+# En las categóricas vereemos muchos colores diferentes en donde cada color respresenta
+#6 cada categoria o grupo. En las continuas veremos un difuminado de puntos. Entrre
+#mas altos los numeros mas oscuro es el color
+
+#  ¿Qué ocurre si haces un mapeo de la misma variable a múltiples estéticas?
+
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = hwy, size = hwy))
+
+# se repite la info. No suma al analisis 
+
+#  Vamos a conocer una estética nueva llamada stroke. ¿Qué hace? ¿Con qué formas funciona bien? 
+
+# añadiendo la estética stroke te permite ampliar el borde de shape del color deseado. 
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy),
+             shape = 23, color = "red", size = 10, fill = "yellow", stroke = 6)
+
+
+#  ¿Qué ocurre si haces un mapeo de una estética a algo que no sea 
+#  directamente el nombre de una variable (por ejemplo aes(color = displ < 4))?
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = displ < 4))
+
+#me va a generar dos conjuntos de datos, los que tienen menor a 4 y mayor los 
+#cataloga como verdadero o falso.
+
+
+
+
+#Sesion 21: problemas en R
+
+?ggplot
+
+#Sesion 22: uso de facets 
+
+#facet_wrap (~<formula_variable>): la variable debe ser discreta
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))+
+  facet_wrap(~cty, nrow = 3)
+
+
+#podemos usar el facet_grid(<Formulavariable1>~<formulavariable2>)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))+
+  facet_grid(drv~cyl) 
+
+#si solo quiero una variable
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))+
+  facet_grid(.~cyl)
+
+
+# el uso de geom_point y valores esteticos tiene que ver con la visualizacion
+#rep`resentación visual, mientras que facet tiene que ver con el orden,segmentación y distribucion de datos
+#es importante que en facet usemos categoricas.
+
+#ASSIGMENT 3  
+#  Questions for this assignment
+
+#  ¿Qué ocurre si hacemos un facet de una variable contínua?
+
+#En este caso no es muy informativa ya que segmenta la informacion innecesariamente covirtiendo la
+#variable continua en una categorica
+
+#   ¿Qué significa si alguna celda queda vacía en el gráfico facet_grid(drv~cyl)?
+
+#significa que no hay observaciones que reflejen una relacion entre ambas variables
+
+#  ¿Qué relación guardan esos huecos vacíos con el gráfico siguiente?
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x=drv, y = cyl)) 
+
+# Son justamente la inexistencia de observaciones del grafico anterior
+
+#¿Qué gráficos generan las siguientes dos instrucciones? ¿Qué hace el punto? ¿Qué diferencias
+#hay de escribir la variable antes o después de la virgula?
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x=displ, y = hwy)) +
+  facet_grid(.~cyl)
+
+#una grafica entre displ (eje x ) y hwy (eje y) cuyas 4 rendijas corresponden a la variable cyl
+#  y a sus 4 categorias. La figura muestra 4 columnas. El punto a la izquiera indica que las 
+#rendijas se ordenaran en columnas, si el punto está a la derecha la grafica mostrara
+# 4  filas con las categorias de la variable.
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x=displ, y = hwy)) +
+  facet_grid(drv~.)
+
+# como mencionamos anterior mente el grafico relaciona displ y hwy respecto de la variable
+#drv, el sistema de traccion. Por tanto, obentremos un grafico de tres filas correspondientes a las
+#tres categorias del sistema de traccion
+
+#El primer facet que hemos pintado era el siguiente:
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_wrap(~class, nrow = 3)
+
+#¿Qué ventajas crees que tiene usar facets en lugar de la estética del color? ¿Qué desventajas? 
+#¿Qué cambiaría si tu dataset fuera mucho más grande?
+
+
+# la visualizacion es mas segmentada y ayuda si son muchas categorias. Cuando usamos colores con muchas categorias tenemos
+#satura el grafico lo que provoca que la lectura sea complicada. Pero también, vemos que cvuando tenemos pocos datos
+# encontrariamos rendijas vacias.
+# si el data set fuera más grande, podrian aumentar las categorias y el numero de rendijas.
+
+# Investiga la documentación de ?facet_wrap y contesta a las siguientes preguntas:
+
+
+?facet_wrap
+
+#¿Qué hace el parámetro nrow?
+
+#indica el numero de filas de nuestra graficas cuando generamos las facets 
+
+#¿Y el parámetro ncol?
+
+#indica el numero de columnas de nuestras graficas cuando generamos las facets
+
+
+#¿Qué otras opciones sirven para controlar el layout de los paneles individuales?
+
+#podemos usar face_grid sin indicar el numero de columnas o filas y ademas definir la 
+#distribucion de la representacion
+
+
+
+#¿Por qué facet_grid() no tiene los parámetros de nrow ni de ncol?
+
+# esto esta determinado por los valores que toma la funcion al momento de la visualizacion
+?facet_grid
+
+#Razona la siguiente afirmación:
+#Cuando representemos un facet con facet_grid() conviene poner la variable 
+#con más niveles únicos en las columnas.
+
+# porque permite dar mas espacio
+
+
+#sesion 23 geometrias 
+
+#diferentes geometrias
+#grafico clasico
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+#con un ajuste no lineal
+
+ggplot(data = mpg) +
+  geom_smooth(mapping = aes(x=displ, y = hwy))
+
+#ahora quiero definir un tipo de linea para cada tipo de dato (por ejemplo, traccion drv)
+
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv, color = drv))
+
+
+#ahora si quiero superponer los puntos a los ajustes 
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy, color = drv))
+
+
+# mpost
+
+
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy, group = drv, color = drv))
+
+# cambiamoso un poco, la instruccion del mapeo se aplica a todas las capas
+# sin embargo, aun podemos modificar los ampping a nivel local
+
+ggplot(data = mpg, mapping = aes(x = displ, y=hwy)) +
+  geom_point(aes(color = class)) + geom_smooth(aes(color = drv))
+
+#otras funciones  
+
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = class)) + 
+  geom_smooth(data = filter(mpg, class == "suv"), se = F)
+
+#ASSIGMENT 3
+
+ggplot(data = mpg, mapping = aes(x=displ, y = hwy,color = drv) ) + 
+  geom_point() + 
+  geom_smooth(se = F)
+
+
+#2. ¿Qué hace el parámetro show.legend = F?
+#¿Qué pasa si lo eliminamos? ¿Cuando lo añadirías y cuando lo quitarías?
+
+#Cuando imponemos show.legend = FALSE, quita la leyenda que describe a las categorias
+# si lo eliminamos asume valor TRUE y siempre incluye las leyendas
+#siempre lo añadiría, pero cuidado que cuando añado group no es capaz de diferenciar 
+
+?ggplot
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = drv))
+
+
+#3. ¿Qué hace el parámetro se de la función geom_smooth()? 
+# Es una modelación lineal-no lineal que se ajusta de mejor manera a los datos
+# ¿Qué pasa si lo eliminamos? ¿Cuando lo añadirías y cuando lo quitarías?
+#Si lo eliminamos, eliminamos la linea ajustada a los datos. Pero los puntos se 
+#mantienen. Lo añadiria cuando quisiera ver una relacion entre variables
+#numericas y su comportamiento. Cuando estudio variables categoricas o discretas 
+# no ayuda este ajuste.
+
+#4. Describe qué hacen los dos siguientes gráficos y di si serán igual y diferente. Justifica tu respuesta.
+
+ggplot(data = mpg, mapping = aes(x=displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth()
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x=displ, y = hwy)) + 
+  geom_smooth(mapping = aes(x=displ, y = hwy))
+
+#hacen lo mismo, solo que en el primer caso se impone el mapeo a nivel general, mientras en el segundo
+#el mapeo es a nivel local.
+
+
+#5. reproduce el grafico
+
+
+ggplot(data = mpg, mapping = aes(x=displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth(se = F)
+
+#6.Reproduce el código de R que te genera el siguiente gráfico.
+
+#ejemplo 1
+ggplot(data = mpg, aes(x=displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth(aes(group = drv), se = F)
+
+#ejemplo 2
+ggplot(data = mpg, aes(x=displ, y = hwy, group = drv)) + 
+  geom_point() + 
+  geom_smooth(se = F)
+
+
+#7. Reproduce el código de R que te genera el siguiente gráfico.
+
+# ejemplo 1 
+
+ggplot (data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point() + 
+  geom_smooth(se = F)
+
+# ejemplo  2
+ggplot (data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = drv)) + 
+  geom_smooth(aes(color  = drv), se = F)
+
+
+#8. Reproduce el código de R que te genera el siguiente gráfico.
+
+# ejemplo 1 
+ggplot(data = mpg) +
+  geom_point(aes(x = displ, y = hwy, color = drv, shape = drv)) + 
+  geom_smooth(aes(x = displ, y = hwy),se = F)
+
+# ejemplo 2        
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point(aes(color = drv, shape = drv)) + 
+  geom_smooth(se = F)
+
+#9.Reproduce el código de R que te genera el siguiente gráfico.
+
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point(aes(color = drv, shape = drv)) + 
+  geom_smooth(aes(group = drv, linetype = drv), se = F)
+
+
+#10. Reproduce el código de R que te genera el siguiente gráfico. 
+#Investiga algunos parámetros adicionales que te harán falta de ggplot2 
+#como stroke entre otros.
+
+ggplot(data = mpg, aes(x = displ, y = hwy, color = drv, fill = drv)) +
+  geom_point(shape = 23, color = "white", size = 3,  stroke = 2 )
+
+
+# sesion 25: transformaciones esteticas basicas
+
+#cambiamos de data set
+
+View(diamonds)      
+
+
+
+#cambiamos a grafico de barras
+
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut))  # solo necesita una entrada ya que medimos las frecuencias
+# ojo con x la variable discreta
+
+
+ggplot(data = diamonds) +
+  stat_count(mapping = aes(x = cut))  
+
+
+# sesion 26: cambiando las transformaciones estadisticas 
+
+
+demo_diamonds = tribble(
+  ~cut,       ~freqs,
+  "Fair",       1610,
+  "Good",       4906,
+  "Very Good", 12082,
+  "Premium"  , 13791,
+  "Ideal"    , 21551,
+)
+
+ggplot(data = demo_diamonds) +
+  geom_bar(mapping = aes(x = cut, y = freqs), stat = "identity")
+
+#si me interesa trabajr con las proprociones
+
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, y = ..prop.., group = 1))
+
+# Stats son aquellas transformaciones estadísticas que le hagamos a los datos.
+#  Nos ayudan a hacer un resumen del dataset para visualizar mejor 
+#  (por ejemplo, la media o la mediana son estadísticas de tendencia central).
+
+ggplot(data = diamonds) +
+  stat_summary(mapping = aes (x = cut, y = depth),
+               fun.min = min,
+               fun.max = max,
+               fun.y = mean)
+
+ggplot(data = diamonds, mapping = aes(x = cut, y = depth)) +
+  stat_summary()
+
+ggplot(data = diamonds) +
+  geom_col(mapping = aes(x = cut, y = depth))
+
+
+#seccion 4
+
+
+
+
+##ASSIGNMENT
+
+# Questions for this assignment
+# ¿Qué hace el parámetro geom_col? ¿En qué se diferencia de geom_bar?
+#los dos son tipos de graficos de barras   
+#geom_col, crea columnas desde el cero del eje hasta la intersección. 
+#geom_bar hace que la altura de la barra sea proporcional al numero de casos
+#en cada grupo, mientras que las barras de geom_col representa las 
+#alturas de los valores de los datos. geom_col necesita entradas para x y y.
+
+
+#   La gran mayoría de geometrías y de stats vienen por parejas que siempre se utilizan en conjunto. 
+#Por ejemplo geom_bar con stats_count. Haz una pasada por la documentación y 
+#la chuleta de ggplot y establece una relación entre esas parejas de funciones.
+#¿Qué tienen todas en común?
+
+#Muchas de las geometrías usan por defecto los stats, siendo estos reconocidos por sus nombres,
+#lo mismo contrariamente. Por ejemplo, geom_boxplot() 
+#con stat_boxplot(), geom_density() con stat_density(), stat_smooth() con geom_smooth(), entre otras. Sin embargo, 
+# hay relaciones que por nombre no siempre aplica. Por ejemplo,  geom_bar() y stat_count(). En este 
+#ultimo caso geom_bar usa la funcion stat_count() para visyualizar un estadistico. Podemos usar la 
+#funciones geometricas o funciones estadisticas para visualizar. Usamos la sintaxis name para
+#variables estadisticas a esteticas
+
+#  ¿Qué variables calcula la función stat_smooth? ¿Qué parámetros controlan su comportamiento?
+
+#e + stat_smooth(method = "lm", formula = y ~ x, se=T,
+#               level=0.95) x, y | ..se.., ..x.., ..y.., ..ymin.., ..ymax..
+
+# las variables que calcula son los valores predichos de y dado el modelo, el error estandar,
+#valores max y min de y del intervalos de confianza.
+
+
+# Cuando hemos pintado nuestro diagrama de barras con sus proporciones, 
+#necesitamos configurar el parámetro group = 1. ¿Por qué?
+
+# Si no configuraramos este parametro, tendriamos que cada categoria tendría una proporcion igual
+# a 1. Al hacer esto estamos dando pesos a cada proporcion dentro de la muestra. 
+
+
+?geom_bar
+
+#   ¿Qué problema tienen los dos siguientes gráficos?
+
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = ..prop..))
+
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = color, y = ..prop..))
+
+
+#las proporciones son calculadas dentro de los grupos.
+
+
+
+
+#Sesion 28 
+
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, colour = cut))
+
+
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = cut)) 
+
+
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x =cut, fill = clarity))
+
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x =cut, fill = color))
+
+## Position ="identity" // acça existe un overlapping
+
+ggplot(data = diamonds, mapping = aes(x =cut, fill = clarity)) + 
+  geom_bar(alpha = 0.5 ,position = "identity")
+
+
+ggplot(data = diamonds, mapping = aes(x =cut, colour = clarity)) + 
+  geom_bar(fill  = NA ,position = "identity")
+
+## Position ="fill"// aca compara entre proprociones
+
+ggplot(data = diamonds, mapping = aes(x =cut, fill = clarity)) + 
+  geom_bar(alpha = 0.5,position = "fill")
+
+## positio = "dodge"
+
+ggplot(data = diamonds, mapping = aes(x =cut, fill = clarity)) + 
+  geom_bar(position = "dodge")
+
+## volviendo a la base anterior. Puede que haya overplotting
+# En este caso la funcion puja o rendondea los valores
+#por lo que puede existir superposicion 
+
+ggplot(data = mpg) +
+  geom_point(aes(x = displ, y = hwy))
+
+#para evitar esto, podemos usar position = "jitter" 
+
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point(position = "jitter")  # este jitter añade un ruido aleatorio a cada punto
+#por lo que ningun otro punto es igual
+
+# en el mismo sentido
+
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_jitter()
+
+?position_identity
+
+
+
+#Sesion 28: Cambiando los sistemas de coordenadas
+
+
+#coord_flip() -> cambia el orden entre X y Y
+
+
+#graficando un boxplot
+
+
+ggplot(data  =  mpg, mapping =  aes(x=class, y = hwy))+
+  geom_boxplot()
+
+# si quiero girar las coordendas, queda
+
+ggplot(data  =  mpg, mapping =  aes(x=class, y = hwy))+
+  geom_boxplot(position = "identity")+
+  coord_flip()
+
+
+
+#coord_quickmap() configuar el aspecto ratio para mapas  
+
+usa = map_data("usa")
+
+ggplot(data = usa, aes(long, lat, group = group))+
+  geom_polygon(fill = "blue", color ="white")+
+  coord_quickmap()
+
+italy = map_data("italy")
+
+ggplot(data = italy, aes(long, lat, group = group))+
+  geom_polygon(fill = "blue", color ="white")+
+  coord_quickmap()
+
+#coordenadas polares 
+
+ggplot(data = diamonds) + 
+  geom_bar(
+    mapping = aes(x = cut, fill = cut),
+    show.legend = F,
+    width = 1
+  ) +
+  theme(aspect.ratio = 1) + 
+  labs(x = NULL, y = NULL) + 
+  coord_polar()
+
+
+#sesion 30: gramatica final de ggplot2
+
+#dos graficas iguales  
+ggplot(diamonds) +
+  geom_bar(mapping = aes(x = clarity))
+
+ggplot(diamonds) +
+  geom_bar(mapping = aes(x = clarity, y = ..count..))
+
+#por proporciones dentro de la muestra
+
+ggplot(diamonds) +
+  geom_bar(mapping = aes(x = clarity, y = ..prop.., group = 1))
+
+#añadimos color
+
+ggplot(diamonds) +
+  geom_bar(mapping = aes(x = clarity, fill = clarity, y = ..count..))
+
+#ahora cambiamos el sistema de coordenadas
+
+ggplot(diamonds) +
+  geom_bar(mapping = aes(x = clarity, fill = clarity, y = ..count..)) +
+  coord_polar() 
+
+#ahora añadimos un tipo de faceta
+
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = clarity, fill = clarity, y=..count..)) +
+  coord_polar() + 
+  facet_wrap(~cut)
+#si queremos añadir etiquetas
+
+
+ggplot(data = diamonds)+
+  geom_bar(mapping = aes(x = clarity, fill = clarity, y=..count..)) +
+  coord_polar() + 
+  facet_wrap(~cut) +
+  labs(x = NULL, y = NULL, title = "Ejemplo ggplot",
+       subtitle = "Ejemplo ggplot con data diamonds", caption = "Elaboracion propia.")
+
+
+
+#ASSIGNMENT 6
+
+#El siguiente gráfico que genera el código de R es correcto pero puede mejorarse.
+#¿Qué cosas añadirías para mejorarlo?
+
+#añadiria un ruedo de aleatorio con el parámetro jitter y luego un smooth
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy )) + 
+  geom_point(position = "jitter") + 
+  geom_smooth()  
+
+
+
+
+#Investiga la documentación de geom_jitter(). ¿Qué parámetros controlan la cantidad de ruído aleatorio (jitter)?
+
+?geom_jitter
+
+#  La geometria de jitter es atajo para el uso de geom_point(position = jitter), en el
+#caso anterior se puede aplicar como una alternativa
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy )) + 
+  geom_jitter()
+# los parametros que conrolan el ruido son width y height
+#ambos controlan la cantidad de ruido vertical (height) y horizonal (width.
+
+ggplot(mpg, aes(cyl, hwy)) +
+  geom_jitter(height  = 1, width = 0)
+
+
+# Compara las funciones geom_jitter contra geom_count y busca semejanzas y diferencias entre ambas.
+
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy )) + 
+  geom_count()
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy )) + 
+  geom_point()
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy )) + 
+  geom_jitter()
+
+?geom_count
+
+# geom_count es una variante de la funcion geom_point, cuando ocurre sobrelapaiento de puntos 
+#geom_point no ayuda a observar la cantidad de observaciones. geom_count recoge y cuabtifica la
+#cantidad de puntos que están sobre una coordenada específica. Geom_jitter añadiendo valores aleatorios
+# permite observar la dispersion de datos desagregados. son geom jitter y count son diferentes en estos sentidos
+#pero ambas buscan observar la cantidad observaciones que hay dentro de la grafica y corregir el problema de
+# geom_point
+
+
+#¿Cual es el valor por defecto del parámetro position de un geom_boxplot? Usa el dataset de diamonds
+#o de mpg para hacer una visualización que lo demuestre.
+
+?geom_boxplot
+
+#el valor por default del parámetro position es dodge2, lo que evita, como el caso de identtity
+#es que haya sobrelapamiento de las cajas
+
+
+ggplot(data  =  mpg, mapping =  aes(x=class, y = hwy, color = drv))+
+  geom_boxplot()
+
+ggplot(data  =  mpg, mapping =  aes(x=class, y = hwy, color = drv))+
+  geom_boxplot(position = "identity")
+
+ggplot(data  =  mpg, mapping =  aes(x=class, y = hwy, color = drv))+
+  geom_boxplot(position = "dodge2")
+
+
+#Convierte un diagrama de barras apilado en un diagrama de sectores o de tarta usando la función coord_polar()
+
+
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = clarity))
+
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, fill = clarity, y=..count..)) +
+  coord_polar()
+
+
+#¿Qué hace la función labs()? Lee la documentación y explícalo correctamente.
+
+?labs
+
+#la funcion labs permite etiquetar tus ejes, además de títulos de las graficas y
+#subtitulos. Estos dos ultimos explican los principales resuyltados. Podemos añadir
+#caption para añadir informacion adicional sobre la fuente de datos. podemos
+#usar tag para ñadir informacion adicional diferenciaada entre multiples graficas
+
+
+#¿En qué se diferencian las funciones coord_quickmap() y coord_map()?
+
+?coord_quickmap
+#coord_map proyecta una porción de la tierra la cual es esfércia en un plano 2D usando una 
+#proyección definida por el paqueta mapproyect. Requiere importate poder de computo.
+#coord_quickmap es una aproximación rápida que preseerva lineas rectas. Se desempeña mejor con
+#areas más pequeñas cercanas al ecueador.
+
+
+#Investiga las coordenadas coord_fixed() e indica su función.
+
+
+?coord_fixed
+
+#esta funcion cambia la relacion del aspecto de la grafica entre las variables.
+#La relación representa el número de unidades en el eje y equivalente a una unidad en el eje x. 
+#El valor predeterminado, ratio = 1, asegura que una unidad en el eje x tenga la misma longitud que una unidad en el eje y.
+#Las relaciones superiores a uno hacen que las unidades en el eje y sean más largas que las unidades en el eje x, y viceversa
+
+#Investiga la geometría de la función geom_abline(), geom_vline() y geom_hline() e indica su función respectivamente.
+
+#geom_abline(): añade una linea diagonal al plot deifinomos el intercepto y pendiente
+
+
+#geom_vline(): añade u a linea vertical al plano cartesiano;definimos el intercepto x
+#geom_hline(): añade una linea horizontal al plano cartesiano; definimos el intercepto y
+
+#¿Qué nos indica el gráfico siguiente acerca de la relación entre el consumo en ciudad y en autopista del dataset de mpg?
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy )) + 
+  geom_point() + 
+  geom_abline() + 
+  coord_fixed()
+
+# nos indica que hay una relación positiva entre el consumo en la ciudad y autopista.
+#como nos indica la linea linea diagonal, esta relacion es mayor a uno ya las observaciones
+#se encuentran sobre esta linea cuyo pendiente es uno. Esto quiere decir que para un vehiculo
+# se recorre mas millas de autopista que millas de ciudad por gallon de gasolina para estas observaciones, en promedio.
+
+
+#sesion 33
+
+#operaciones matematicas
+
+choose(3,2)
+
+round(pi, digits = 2)    
+
+factorial(3)
+
+x <- round(sqrt(24), 3)
+
+#Formas para asignar variables
+
+#EL SNAKE CASE 
+
+variable_x_snake_case <- 90
+
+#otro caso es el CameL Case
+
+VariableCamelCase <-  80
+
+#separadas por puntos    
+
+Variable.Separada.por.puntos  <- 60
+
+
+library(tidyverse)
+ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy)) 
+filter(mpg, cyl == 6) 
+filter(diamonds, carat > 4)
+
+#fijar el directorio
+
+setwd("")
+
+#donde está mi trabajo
+
+getwd()
+
+
+#grafica
+
+ggplot(data = diamonds, aes(x = carat, y = price))+
+  geom_hex()
+
+#este guarda la ultima grafica 
+ggsave("diamonds_hex.pdf")
+
+#si me interesa guadar un fichero
+
+write.csv(diamonds, "data/diamonds.csv")
+
+#sesion 40: paquete dplyr
+

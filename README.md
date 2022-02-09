@@ -1,6 +1,6 @@
 # Curso de Tidyverse
 
-Este curso de tidyverse está enfocado al análisis de datos y proviene del libro 'R for Data Science de Garrett Grolemund y Hadley Wickham'. Lo desarrollé junto al curso de Juan Gabriel
+Este curso de tidyverse está enfocado al análisis de datos y proviene del libro 'R for Data Science de Garrett Grolemund y Hadley Wickham'. Es un curso de Juan Gabriel
 Gomila. Alguno de los tópicos que vimos en este curso se pueden resumir en: 
 
 Aprenderás a utilizar ggplot2, una librería muy completa para representaciones gráficas basada en el uso de capas de información 
